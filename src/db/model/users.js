@@ -16,14 +16,14 @@ async function insertUser(userData){
 
 }
 
-async function getUserFromUsername(userName){
-    let db=await mongo.startConnection();
-    if(!userName){
-        throw new Error("Email Missing");
+async function getUserFromUsername(user){
+    let client=await mongo.startConnection();
+    if(!user){
+        throw new Error("UserName Missing");
     }
-    const collection=db.collection("user");
+    const collection=client.db("nextStead").collection("user");
     try {
-      const userData=  await collection.findOne(userName);
+      const userData=  await collection.findOne({user});
       return userData;
     } catch (error) {
         console.log(error);
@@ -32,11 +32,11 @@ async function getUserFromUsername(userName){
 }
 
 async function getUserFromUserAndPassword(user,password){
-    let db=await mongo.startConnection();
+    let client=await mongo.startConnection();
     if(!user||!password){
         throw new Error("Missing Details");
     }
-    const collection=db.collection("user");
+    const collection=client.db("nextStead").collection("user");
     try {
       const userData=  await collection.findOne({user,password});
       return userData;

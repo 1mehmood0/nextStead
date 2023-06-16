@@ -2,7 +2,7 @@ const {verifyJwt}=require("./auth")
 const userModel=require("../db/model/users")
 
 
-async function auth(req,res,){
+async function auth(req,res,next){
     if(!req.headers.token){
         res.status(403).send("Auth Token header missing");
     }
@@ -12,12 +12,14 @@ async function auth(req,res,){
             throw new Error("Invalid JWT");
         }
         else{
-            const userData=await userModel.getUserFromUsername(decodedToken);
+            console.log(decodedToken);
+            const userData=await userModel.getUserFromUsername(decodedToken.user);
             if(!userData){
                 throw new Error("Corrupted Token! No User Found")
             }
             else{
-                req.user=userData;
+                req.userData=userData;
+                next();
             }
         }
 
