@@ -1,11 +1,13 @@
 const Router=require('express').Router();
 const {createJwt}=require("../utils/auth")
 const userModel=require("../db/model/users")
+const gameModel=require("../db/model/games")
 const auth=require("../utils/middleware")
 
 Router
 .post('/register',register)
 .post('/login',login)
+.get('/timeData',auth,downloadCsvTimeData)
 
 async function register(req,res){
     const {user,password}=req.body;
@@ -39,6 +41,11 @@ if(!user||!password)
     })
    }
 }
+}
+async function downloadCsvTimeData(req,res){
+    const user=req.userData.user;
+    const allGamesWithTime=await gameModel.getAllGamesWithCoinsUpdateTimeForUser(user);
+    res.status(200).send(allGamesWithTime);
 }
 
 module.exports=Router;
