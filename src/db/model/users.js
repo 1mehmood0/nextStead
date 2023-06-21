@@ -1,12 +1,12 @@
 const mongo=require("../index");
 
 async function insertUser(userData){
-    let db=await mongo.startConnection();
+    let client=await mongo.startConnection();
     if(!userData){
         throw new Error("Data Missing");
     }
     userData["coins"]=100;
-    const collection=db.collection("user");
+    const collection=client.db("nextStead").collection("user");
     try {
         await collection.insertOne(userData)
     } catch (error) {
@@ -45,6 +45,7 @@ async function getUserFromUserAndPassword(user,password){
         throw new Error("Failed to fetch ");
     }
 }
+
 
 module.exports={
     insertUser,
